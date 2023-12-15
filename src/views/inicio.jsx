@@ -3,9 +3,12 @@ import { Card } from "react-bootstrap/";
 // import axios from "axios"; 
 
 import TablaDeDatos from './../components/TablaDeDatos';
+import { useAuthContext } from "../context/authcontext";
 
 const Inicio = () => {
   const [lista, setLista] = useState([]); // creo una lista vacia y la funcion para llenarla.
+
+  const authContext =  useAuthContext();
 
   const cargarLista = async () => {
     const url = 'http://localhost:3000/usuarios'
@@ -34,6 +37,7 @@ const Inicio = () => {
   // utilizo useEffect para cargar la lista al renderizarse
   useEffect( () =>{
     cargarLista();
+    console.log(authContext)
   },[]);
 
   return (

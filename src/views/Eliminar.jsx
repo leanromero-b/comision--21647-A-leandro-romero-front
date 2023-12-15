@@ -26,9 +26,9 @@ const Eliminar = () => {
     // const datos = {id: id}
     
     try {
-      const respuesta = await axios.delete(url, {data :{id: id}});
+      const respuesta = await axios.delete(url, {data :{id:id}});
       if (respuesta.status === 200){
-        // return navigate('/');
+        return navigate('/');
       } else{
         setError('Ocurrio un error al intentar eliminar el usuario.');
       }

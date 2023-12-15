@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -8,27 +8,25 @@ import axios from "axios";
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
 
+import { traerDatosDeUsiarioPorID } from './../utils/funciones.js'
 
-const FormularioIngresar = () => {
-  const [usuario, setUsuario] = useState ('');
+
+const Editar = (props) => {
+  // eslint-disable-next-line react/prop-types
+  const { id } = props;
+  const url = 'http://localhost:3000/usuario';
+
   const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState('');
   const [password, setPassword] = useState("");
   const [deshabilitarBoton,setDeshabilitarBoton] = useState(false);
   const [errores, setErrores]= useState({});
 
   const navigate = useNavigate();
+  
 
-  const cambiarUsuario = (e) => {
-    setUsuario (e.target.value); 
-  }
 
   const cambiarNombre = (e) => {
     setNombre(e.target.value);
-  };
-
-  const cambiarApellido = (e) => {
-    setApellido(e.target.value);
   };
 
   const cambiarPassword = (e) => {
@@ -38,17 +36,9 @@ const FormularioIngresar = () => {
   const verificarDatos = async () => {
     let misErrores = {}
 
-    if (usuario.length === 0) {
-      // setErrores( { nombre:'Debe introducir un nombre de usuario.' } );
-      misErrores.usuario = 'Debe introducir un nombre de usuario.'
-    }  
     if (nombre.length === 0) {
       // setErrores( { nombre:'Debe introducir un nombre.' } );
       misErrores.nombre = 'Debe introducir un nombre.'
-    }  
-    if (apellido.length === 0) {
-      // setErrores( { nombre:'Debe introducir un nombre.' } );
-      misErrores.apellido = 'Debe introducir un apellido.'
     }  
     
     if (password.length === 0) {
@@ -60,35 +50,22 @@ const FormularioIngresar = () => {
          
     if (Object.entries(misErrores).length === 0) {
       setDeshabilitarBoton (true);
-      console.log(usuario);
       console.log(nombre);
-      console.log(apellido);
       console.log(password);
 
       await enviarDatos ()
     }
   };
 
-  // useEffect(()=> {
-  //   console.log(errores)
-  // }, [errores])
-
-  // useEffect(() => {
-  //   cargarDatos();
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[]);
-
   const enviarDatos = async() => {
-    const url = 'http://localhost:3000/usuario';
     const datos = {
-      usuario: usuario,
+      id : id,
       nombre: nombre,
-      apellido: apellido,
       password: password,
     }
 
     try {
-      const respuesta = await axios.post(url, datos);
+      const respuesta = await axios.put(url, datos);
       if (respuesta.status === 200){
        return navigate('/');
       } else{
@@ -102,48 +79,53 @@ const FormularioIngresar = () => {
 
   }
 
+
+  const traerDatos =  async () => {
+
+    const respuesta = await traerDatosDeUsiarioPorID (id);
+    if (respuesta) {
+      setNombre(respuesta.nombre);
+      setPassword(respuesta.password)
+    } else {
+      setErrores({ error:'Ocurrio un error al traer los datos del usuario.'}); 
+      setDeshabilitarBoton(true);      
+    }
+    // const endpoint = url + '/' + id
+    
+    // try {
+    //     const respuesta = await axios.get( endpoint );
+    //     if (respuesta.status === 200) {
+    //       const usuario = respuesta.data
+    //       setNombre(usuario.nombre);
+    //       setPassword(usuario.password)
+
+    //     } else{
+    //       setErrores({ error:'Ocurrio un error al traer los datos del usuario' + {id} + '.'}); 
+    //       setDeshabilitarBoton(true);
+    //     }
+    // } catch (error) {
+    //   setErrores({ error:'Ocurrio un error al traer los datos del usuario.'}); 
+    //   setDeshabilitarBoton(true);
+    //   }
+  }
+
+  useEffect(() => {
+    traerDatos();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ ])
+
   return (
     <Form>
-      <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-        <Form.Label column sm="2">
-          Usuario
-        </Form.Label>
-        <Col sm="10">
-          <Form.Control type="text" onInput={cambiarUsuario} />
-          {
-            errores.usuario && (<span style={{color:"red"}}>
-              {
-                errores.usuario
-              }</span>)
-          }
-          
-        </Col>
-      </Form.Group>
       <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
         <Form.Label column sm="2">
           Nombre
         </Form.Label>
         <Col sm="10">
-          <Form.Control type="text" onInput={cambiarNombre} />
+          <Form.Control type="text" onInput={cambiarNombre} defaultValue={nombre}/>
           {
             errores.nombre && (<span style={{color:"red"}}>
               {
                 errores.nombre
-              }</span>)
-          }
-          
-        </Col>
-      </Form.Group>
-      <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-        <Form.Label column sm="2">
-          Apellido
-        </Form.Label>
-        <Col sm="10">
-          <Form.Control type="text" onInput={cambiarApellido} />
-          {
-            errores.apellido && (<span style={{color:"red"}}>
-              {
-                errores.apellido
               }</span>)
           }
           
@@ -155,7 +137,7 @@ const FormularioIngresar = () => {
           Password
         </Form.Label>
         <Col sm="10">
-          <Form.Control type="password" onInput={cambiarPassword} />
+          <Form.Control type="text" onInput={cambiarPassword} defaultValue={password} />
           {
             errores.password && (<span style={{color:"red"}}>
               {
@@ -169,10 +151,10 @@ const FormularioIngresar = () => {
             errores.error && (<Alert  variant='warning'>{errores.error}</Alert>)
           }
       <Button variant="primary" onClick={verificarDatos} disabled ={deshabilitarBoton} >
-        Cargar Datos
+        Editar Datos
       </Button>
     </Form>
   );
 };
 
-export default FormularioIngresar;
+export default Editar;

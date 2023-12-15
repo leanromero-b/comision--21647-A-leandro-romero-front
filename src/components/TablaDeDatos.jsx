@@ -10,7 +10,11 @@ const TablaDeDatos = (props) => {
     const navigate = useNavigate();
 
     const editar = (_id) =>{    
-        navigate('/cargar/' + _id)
+        navigate('/editar/' + _id)
+    }
+
+    const ver = (_id) =>{    
+        navigate('/ver/' + _id)
     }
 
     const eliminar = (_id) =>{
@@ -23,7 +27,7 @@ const TablaDeDatos = (props) => {
                 <tr>
                     <th>#</th>
                     {/* comento el id de mongodb */}
-                    <th>id</th> 
+                    {/* <th>id</th>  */}
                     <th>Nombre</th>
                     <th>Password</th>
                     <th >Acciones</th>
@@ -34,13 +38,14 @@ const TablaDeDatos = (props) => {
                     // eslint-disable-next-line react/prop-types
                     lista.map( (registro, key) =>(
                         <tr key={ key }>
-                            <td>{ key }</td>
-                            <td>{ registro._id }</td>
+                            <td>{ key +1 }</td>
+                            {/* <td>{ registro._id }</td> */}
                             <td>{ registro.nombre }</td>
                             <td>{ registro.password }</td>
-                            <td >   <ButtonGroup style={{maxWidth: '30px'}} >
-                                       <Button variant="primary" onClick={() => editar(key)}>Editar</Button>
-                                       <Button variant="danger" onClick={() => eliminar(key)}>Eliminar</Button>
+                            <td >   <ButtonGroup style={{maxWidth: '30px'}}  > 
+                                       <Button variant="success" onClick={() => ver (registro._id)}>Ver</Button> {' '}
+                                       <Button variant="primary" onClick={() => editar(registro._id)}>Editar</Button> {' '}
+                                       <Button variant="danger" onClick={() => eliminar(registro._id)}>Eliminar</Button> {' '}
                                    </ButtonGroup>  </td>
                         </tr>
                     ))

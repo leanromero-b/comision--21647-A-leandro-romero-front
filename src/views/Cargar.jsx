@@ -1,9 +1,9 @@
 import { Card } from "react-bootstrap/";
-import Login from "../components/formularioIngresar.jsx";
+import FormularioIngresar from "../components/formularioIngresar.jsx";
 
 const Cargar = () => {
   return  <Card.Body>
-            <Login />
+            <FormularioIngresar />
           </Card.Body>;
 };
 
