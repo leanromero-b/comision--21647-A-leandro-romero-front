@@ -3,9 +3,9 @@ import axios from "axios";
 
 
 
-const url = 'http://localhost:3000/usuario';
+const url = 'http://localhost:3000/post';
 
-const traerDatosDeUsiarioPorID = async (id) => {
+const traerDatosDePostPorID = async (id) => {
     const endpoint = url + '/' + id
     
     try {
@@ -20,4 +20,4 @@ const traerDatosDeUsiarioPorID = async (id) => {
       }
 }
 
-export  { traerDatosDeUsiarioPorID, }
+export  { traerDatosDePostPorID, }

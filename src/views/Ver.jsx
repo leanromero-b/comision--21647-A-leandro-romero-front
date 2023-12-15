@@ -2,25 +2,25 @@ import { useState, useEffect } from "react";
 import { Card, Button } from "react-bootstrap/";
 import { useParams } from "react-router-dom";
 
-import { traerDatosDeUsiarioPorID } from "../utils/funciones";
+import { traerDatosDePostPorID } from "../utils/funciones";
 
 const Ver = () => {
   const { id } = useParams();
-  const [nombre, setNombre] = useState("");
-  const [password, setPassword] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
 
   const traerDatos = async () => {
-    const respuesta = await traerDatosDeUsiarioPorID(id);
+    const respuesta = await traerDatosDePostPorID(id);
     if (respuesta) {
-      setNombre(respuesta.nombre);
-      setPassword(respuesta.password);
+      setTitulo(respuesta.titulo);
+      setDescripcion(respuesta.descripcion);
     } else {
-      console.log("No se encontro un usuario con el id" + id);
+      console.log("No se encontro un el post del usuario " + id);
     }
   };
   useEffect(() => {
     traerDatos();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -29,11 +29,10 @@ const Ver = () => {
         {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
         <Card.Body>
           <Card.Title>
-            {nombre} {password}
+            {titulo}
           </Card.Title>
           <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the s content.
+            {descripcion}
           </Card.Text>
           <Button variant="primary">Editar</Button>
         </Card.Body>
@@ -44,10 +43,9 @@ const Ver = () => {
         <Card.Body>
           <Card.Title>Comentarios</Card.Title>
           <Card.Body>
-            {
-              [...Array(3)].map((item, key) => (
-                <div key={key}>
-                <Card >
+            {[...Array(3)].map((item, key) => (
+              <div key={key}>
+                <Card>
                   <Card.Body>
                     <Card.Title>Usuario</Card.Title>
                     <Card.Text>Este es un comentario</Card.Text>
@@ -56,9 +54,8 @@ const Ver = () => {
                   </Card.Body>
                 </Card>
                 <br />
-                </div>
-              ))
-            }
+              </div>
+            ))}
           </Card.Body>
         </Card.Body>
       </Card>

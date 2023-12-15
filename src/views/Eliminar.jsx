@@ -22,7 +22,7 @@ const Eliminar = () => {
     setError(false);
     setDeshabilitarBoton (true);
     
-    const url = 'http://localhost:3000/usuario';
+    const url = 'http://localhost:3000/post';
     // const datos = {id: id}
     
     try {
@@ -30,10 +30,10 @@ const Eliminar = () => {
       if (respuesta.status === 200){
         return navigate('/');
       } else{
-        setError('Ocurrio un error al intentar eliminar el usuario.');
+        setError('Ocurrio un error al intentar eliminar el post.');
       }
     } catch (error) {
-      setError('Ocurrio un error al intentar eliminar el usuario.');    
+      setError('Ocurrio un error interno al intentar eliminar el post.');    
     }
        
     setDeshabilitarBoton (false);
@@ -43,7 +43,7 @@ const Eliminar = () => {
    return (
     <Card.Body>
       <Alert variant="warning">
-        Esta seguro que desea eliminar el usuario? {id}
+        Esta seguro que desea eliminar el post? {id}
       </Alert>
 
       {

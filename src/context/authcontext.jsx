@@ -2,7 +2,7 @@ import { useState, useContext, createContext } from "react";
 import {
   guardarDatos,
   guardarToken,
-  //   tokenGuardados,
+    tokenGuardados,
     datosGuardados,
   limpiarLocalStorage,
 } from "../utils/login.js";
@@ -14,20 +14,23 @@ const AuthProvider = (props) => {
   const { children } = props;
 
   const [usuario, setUsuario] = useState(datosGuardados());
+  const [token, setToken] = useState(tokenGuardados());
 
   const login = (datos, token) => {
     guardarDatos(datos);
     guardarToken(token);
     setUsuario(datos);
+    setToken(token);
   };
 
   const logout = () => {
     limpiarLocalStorage(); 
     setUsuario(null);
+    setToken(null)
   };
 
   return (
-    <AuthContext.Provider value={{ usuario, login, logout }}>
+    <AuthContext.Provider value={{ usuario, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
