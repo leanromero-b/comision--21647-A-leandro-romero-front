@@ -46,7 +46,7 @@ const Inicio = () => {
         {usuario ? "Bienvenido " + usuario.nombre : ""}
       </h2>
       <br />
-      <TablaDeDatos lista={lista} />
+      <TablaDeDatos lista={lista} usuario={usuario} />
     </Card.Body>
   );
 };

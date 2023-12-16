@@ -13,7 +13,7 @@ import { traerDatosDePostPorID } from "./../utils/funciones.js";
 
 const Editar = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { id } = props;
+  const { id, token, usuario} = props;
   const url = 'http://localhost:3000/post';
 
   const [titulo, setTitulo] = useState("");
@@ -23,7 +23,6 @@ const Editar = (props) => {
 
   const navigate = useNavigate();
   
-
 
   const cambiarTitulo = (e) => {
     setTitulo(e.target.value);
@@ -64,8 +63,12 @@ const Editar = (props) => {
       descripcion: descripcion,
     }
 
+    const headers ={
+      token: token
+    }
+
     try {
-      const respuesta = await axios.put(url, datos);
+      const respuesta = await axios.put(url, datos, { headers: headers });
       if (respuesta.status === 200){
        return navigate('/');
       } else{
@@ -74,22 +77,27 @@ const Editar = (props) => {
     } catch (error) {
       setErrores({ error:'Ocurrio un error interno al enviar los datos.'});    
     }
-
     setDeshabilitarBoton(false);
-
   }
-
-
+  
   const traerDatos =  async () => {
-
-    const respuesta = await traerDatosDePostPorID (id);
-    if (respuesta) {
-      setTitulo(respuesta.titulo);
-      setDescripcion(respuesta.descripcion)
+    if (usuario) {
+      const respuesta = await traerDatosDePostPorID (id);
+      if (respuesta) {
+        // eslint-disable-next-line react/prop-types 
+        if (usuario.id !== respuesta.autor ){
+          return navigate('/');
+        }
+        setTitulo(respuesta.titulo);
+        setDescripcion(respuesta.descripcion)
+      } else {
+        setErrores({ error:'Ocurrio un error al traer los datos del posteo.'}); 
+        setDeshabilitarBoton(true);      
+      }
     } else {
-      setErrores({ error:'Ocurrio un error al traer los datos del posteo.'}); 
-      setDeshabilitarBoton(true);      
+       return navigate('/')
     }
+    
   }
 
   useEffect(() => {

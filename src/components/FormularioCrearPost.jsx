@@ -55,7 +55,7 @@ const FormularioCrearPost = () => {
     const datos = {
       titulo: titulo,
       descripcion: descripcion,
-      autor:  1
+      // autor:  
     };
 
     const headers = { token: token };
