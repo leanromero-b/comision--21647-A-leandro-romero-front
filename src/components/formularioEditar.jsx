@@ -8,50 +8,49 @@ import axios from "axios";
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
 
-import { traerDatosDeUsiarioPorID } from './../utils/funciones.js'
+import { traerDatosDePostPorID } from "./../utils/funciones.js";
 
 
 const Editar = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { id } = props;
-  const url = 'http://localhost:3000/usuario';
+  const { id, token, usuario} = props;
+  const url = 'http://localhost:3000/post';
 
-  const [nombre, setNombre] = useState("");
-  const [password, setPassword] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
   const [deshabilitarBoton,setDeshabilitarBoton] = useState(false);
   const [errores, setErrores]= useState({});
 
   const navigate = useNavigate();
   
 
-
-  const cambiarNombre = (e) => {
-    setNombre(e.target.value);
+  const cambiarTitulo = (e) => {
+    setTitulo(e.target.value);
   };
 
-  const cambiarPassword = (e) => {
-    setPassword(e.target.value);
+  const cambiarDescripcion = (e) => {
+    setDescripcion(e.target.value);
   };
 
   const verificarDatos = async () => {
     let misErrores = {}
 
-    if (nombre.length === 0) {
-      // setErrores( { nombre:'Debe introducir un nombre.' } );
-      misErrores.nombre = 'Debe introducir un nombre.'
+    if (titulo.length === 0) {
+   
+      misErrores.titulo = 'Debe introducir un titulo.'
     }  
     
-    if (password.length === 0) {
-      // setErrores( { password:'Debe introducir un password.' } );
-      misErrores.password = 'Debe introducir un password.'
+    if (descripcion.length === 0) {
+
+      misErrores.descripcion = 'Debe introducir una descripcion.'
     }  
 
     setErrores(misErrores);
          
     if (Object.entries(misErrores).length === 0) {
       setDeshabilitarBoton (true);
-      console.log(nombre);
-      console.log(password);
+      console.log(titulo);
+      console.log(descripcion);
 
       await enviarDatos ()
     }
@@ -60,53 +59,45 @@ const Editar = (props) => {
   const enviarDatos = async() => {
     const datos = {
       id : id,
-      nombre: nombre,
-      password: password,
+      titulo: titulo,
+      descripcion: descripcion,
+    }
+
+    const headers ={
+      token: token
     }
 
     try {
-      const respuesta = await axios.put(url, datos);
+      const respuesta = await axios.put(url, datos, { headers: headers });
       if (respuesta.status === 200){
        return navigate('/');
       } else{
         setErrores({ error:'Ocurrio un error al enviar los datos.'});
       }
     } catch (error) {
-      setErrores({ error:'Ocurrio un error al enviar los datos.'});    
+      setErrores({ error:'Ocurrio un error interno al enviar los datos.'});    
     }
-
     setDeshabilitarBoton(false);
-
   }
-
-
+  
   const traerDatos =  async () => {
-
-    const respuesta = await traerDatosDeUsiarioPorID (id);
-    if (respuesta) {
-      setNombre(respuesta.nombre);
-      setPassword(respuesta.password)
+    if (usuario) {
+      const respuesta = await traerDatosDePostPorID (id);
+      if (respuesta) {
+        // eslint-disable-next-line react/prop-types 
+        if (usuario.id !== respuesta.autor ){
+          return navigate('/');
+        }
+        setTitulo(respuesta.titulo);
+        setDescripcion(respuesta.descripcion)
+      } else {
+        setErrores({ error:'Ocurrio un error al traer los datos del posteo.'}); 
+        setDeshabilitarBoton(true);      
+      }
     } else {
-      setErrores({ error:'Ocurrio un error al traer los datos del usuario.'}); 
-      setDeshabilitarBoton(true);      
+       return navigate('/')
     }
-    // const endpoint = url + '/' + id
     
-    // try {
-    //     const respuesta = await axios.get( endpoint );
-    //     if (respuesta.status === 200) {
-    //       const usuario = respuesta.data
-    //       setNombre(usuario.nombre);
-    //       setPassword(usuario.password)
-
-    //     } else{
-    //       setErrores({ error:'Ocurrio un error al traer los datos del usuario' + {id} + '.'}); 
-    //       setDeshabilitarBoton(true);
-    //     }
-    // } catch (error) {
-    //   setErrores({ error:'Ocurrio un error al traer los datos del usuario.'}); 
-    //   setDeshabilitarBoton(true);
-    //   }
   }
 
   useEffect(() => {
@@ -118,14 +109,14 @@ const Editar = (props) => {
     <Form>
       <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
         <Form.Label column sm="2">
-          Nombre
+          Titulo
         </Form.Label>
         <Col sm="10">
-          <Form.Control type="text" onInput={cambiarNombre} defaultValue={nombre}/>
+          <Form.Control type="text" onInput={cambiarTitulo} defaultValue={titulo}/>
           {
-            errores.nombre && (<span style={{color:"red"}}>
+            errores.titulo && (<span style={{color:"red"}}>
               {
-                errores.nombre
+                errores.titulo
               }</span>)
           }
           
@@ -134,14 +125,14 @@ const Editar = (props) => {
 
       <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
         <Form.Label column sm="2">
-          Password
+          Descripcion
         </Form.Label>
         <Col sm="10">
-          <Form.Control type="text" onInput={cambiarPassword} defaultValue={password} />
+          <Form.Control type="text" onInput={cambiarDescripcion} defaultValue={descripcion} />
           {
-            errores.password && (<span style={{color:"red"}}>
+            errores.descripcion && (<span style={{color:"red"}}>
               {
-                errores.password
+                errores.descripcion
               }
             </span>)
           }
@@ -151,7 +142,7 @@ const Editar = (props) => {
             errores.error && (<Alert  variant='warning'>{errores.error}</Alert>)
           }
       <Button variant="primary" onClick={verificarDatos} disabled ={deshabilitarBoton} >
-        Editar Datos
+        Editar Post
       </Button>
     </Form>
   );

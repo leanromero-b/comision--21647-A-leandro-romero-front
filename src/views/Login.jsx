@@ -1,9 +1,9 @@
-// import { useNavigate } from "react-router-dom";
 // import { guardarDatos, guardarToken } from "../utils/login.js";
 
 import { useState } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap/";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import { useAuthContext } from "../context/authcontext.jsx";
 
@@ -15,7 +15,7 @@ const Login = () => {
   const [deshabilitarBoton, setDeshabilitarBoton] = useState(false);
   const [errores, setErrores] = useState({});
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const {login} = useAuthContext();
 
@@ -44,8 +44,6 @@ const Login = () => {
 
     if (Object.entries(misErrores).length === 0) {
       setDeshabilitarBoton(true);
-      // console.log(usuario);
-      // console.log(password);
 
       await enviarDatos();
     }
@@ -64,7 +62,7 @@ const Login = () => {
         const {datos, token} = respuesta.data;
 
        login(datos, token);
-        // return navigate("/");
+        return navigate("/");
       } else {
         setErrores({ error: "Ocurrio un error al verificar los datos." });
       }

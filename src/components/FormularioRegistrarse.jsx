@@ -9,7 +9,7 @@ import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from "react-router-dom";
 
 
-const FormularioIngresar = () => {
+const FormularioRegistrarse = () => {
   const [usuario, setUsuario] = useState ('');
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState('');
@@ -169,10 +169,10 @@ const FormularioIngresar = () => {
             errores.error && (<Alert  variant='warning'>{errores.error}</Alert>)
           }
       <Button variant="primary" onClick={verificarDatos} disabled ={deshabilitarBoton} >
-        Cargar Datos
+        Registrarse
       </Button>
     </Form>
   );
 };
 
-export default FormularioIngresar;
+export default FormularioRegistrarse;

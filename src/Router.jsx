@@ -4,12 +4,13 @@ import { createBrowserRouter } from "react-router-dom";
 //VISTAS
 
 import Inicio from "./views/inicio.jsx";
-import Cargar from "./views/Cargar.jsx";
-import Registrar from "./views/Registrar.jsx";
+import RegistrarUsuario from "./views/RegistrarUsuario.jsx";
+// import Registrar from "./views/Registrar.jsx";
 import Eliminar from "./views/Eliminar.jsx";
 import Editar from "./views/Editar.jsx"; /* VistaEditar*/
 import Ver from "./views/Ver.jsx"
 import Login from "./views/Login.jsx";
+import CrearPosteo from "./views/CrearPosteo.jsx";
 
 
 
@@ -18,11 +19,8 @@ const rutas = createBrowserRouter([
     path: "/",    // ruta de inicio
     element: <Inicio />,
   },{
-    path: "/cargar",
-    element: <Cargar/>,
-  },{
     path: "/registrarse",
-    element: <Registrar />,
+    element: <RegistrarUsuario/>,
   },{
     path: "/eliminar/:id",
     element: <Eliminar />,
@@ -35,6 +33,9 @@ const rutas = createBrowserRouter([
   },{
     path: "/login/",
     element: <Login />,
+  },{
+    path: "/publicacion/",
+    element: <CrearPosteo />,
   },
 
 ]);
